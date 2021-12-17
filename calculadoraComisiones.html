@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es-419">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Poppins&display=swap" rel="stylesheet">
+    <!-- font-family: 'Open Sans', sans-serif;
+         font-family: 'Poppins', sans-serif; -->
+
+    <title>Document</title>
+
+    <style>
+        *,
+        *::after,
+        *::before {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-size: 1.2em;
+            min-width: 450px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin: 0;
+        }
+        
+        header {
+            background-color: #9E9E9E;
+            width: 100%;
+            padding: .5em 1em;
+        }
+        
+        main {
+            padding: 0em 1em;
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        textarea {
+            width: 90%;
+            height: 35ch;
+            display: block;
+            margin: 1em;
+        }
+        
+        button {
+            padding: .5em;
+            font-weight: 700;
+            font-size: 1em;
+            background-color: white;
+            cursor: pointer;
+            width: 200px;
+            margin-left: 1em;
+        }
+        
+        .para {
+            padding: 0em 1em;
+        }
+        
+        button:hover {
+            background-color: black;
+            color: white;
+        }
+        
+        button:active {
+            background-color: green;
+        }
+        
+        .bold {
+            font-weight: 700;
+        }
+        
+        h1 {
+            margin: 0em;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        footer {
+            background-color: #9E9E9E;
+            width: 100%;
+            padding: 0em .5em;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        footer * {
+            font-size: .8em;
+        }
+        
+        footer a {
+            margin: auto 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Calculadora de comisiones</h1>
+    </header>
+    <textarea name="string" id="input" cols="30" rows="10" class="input"></textarea>
+    <button class="btn">Calcular</button>
+    <div class="para"></div>
+    <footer>
+        <p>Hecho por Luis Simosa</p>
+        <a href="https://drive.google.com/file/d/12GAtkz2ZIoXicjOOZzGBRZF9ygHysVYj/view?usp=sharing">Lista de precios actual</a>
+    </footer>
+    <script>
+        const input = document.querySelector('.input');
+        const btn = document.querySelector('.btn');
+        const para = document.querySelector('.para');
+        const text = document.createElement('p');
+
+        let comisiones = 0;
+
+        function calcular(arr, count) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] === "1gb" || arr[i] === "2gb") {
+                    count += 835 * 0.21;
+                } else if (arr[i] === "1,5gb") {
+                    count += 1099 * 0.21;
+                } else if (arr[i] === "3gb") {
+                    count += 1281 * 0.21;
+                } else if (arr[i] === "4gb") {
+                    count += 1586 * 0.21;
+                } else if (arr[i] === "5gb") {
+                    count += 1753 * 0.21;
+                } else if (arr[i] === "12gb") {
+                    count += 3041 * 0.21;
+                } else {}
+            }
+            return count.toFixed(2);
+        }
+
+        let myRegex = /[\d+]gb|\d,\dgb/gi;
+
+        let outCount;
+        let inCount;
+
+        let totalCount;
+
+        btn.addEventListener('click', () => {
+
+            let string = input.value.toLowerCase();
+            let migras = string.match(myRegex);
+
+            if (migras === null) {
+                text.textContent = "No hay datos para procesar";
+                para.appendChild(text);
+
+            } else {
+                totalCount = migras.length;
+
+                if (string.match(/in/gi) === null || string.match(/out/gi) === null) {
+                    if (string.match(/in/gi) === null && string.match(/out/gi) === null) {
+                        console.log('hmm');
+                        text.textContent = `Tienes un total de ${totalCount} migras. Tus comisiones totales son de $${calcular(migras, comisiones)}`;
+                        para.appendChild(text);
+                    } else if (string.match(/out/gi) === null) {
+                        outCount = 0;
+                        inCount = string.match(/in/gi).length;
+                        text.textContent = `Tienes un total de ${totalCount} migras, ${outCount} en Out y ${inCount} en In. Tus comisiones totales son de $${calcular(migras, comisiones)}`;
+                        para.appendChild(text);
+                    } else if (string.match(/in/gi) === null) {
+                        inCount = 0;
+                        outCount = string.match(/out/gi).length;
+                        text.textContent = `Tienes un total de ${totalCount} migras, ${outCount} en Out y ${inCount} en In. Tus comisiones totales son de $${calcular(migras, comisiones)}`;
+                        para.appendChild(text);
+                    }
+                } else {
+                    outCount = string.match(/out/gi).length;
+                    inCount = string.match(/in/gi).length;
+                    text.textContent = `Tienes un total de ${totalCount} migras, ${outCount} en Out y ${inCount} en In. Tus comisiones totales son de $${calcular(migras, comisiones)}`;
+                    para.appendChild(text);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
